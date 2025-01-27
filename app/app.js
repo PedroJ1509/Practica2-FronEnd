@@ -1,38 +1,38 @@
 import Vue from 'nativescript-vue'
 
 import { _loginService } from "./services/authService";
+import { articuloService } from './services/articulosService';
 
 
+Vue.config.silent = false;
 
 const Master = {
   template: `
     <Page>
-        
         <ActionBar>
-            <Label text="Opciones"/>
+            <Label text="Elegir Opción"/>
         </ActionBar>
-        <ListView for="item in listOption" @itemTap="onItemTap">
+        <GridLayout>
+
+            <ListView for="item in listOption" @itemTap="onItemTap" >
                 <v-template>
                     <!-- Shows the list item label in the default color and style. -->
                     <Label :text="item.text"  class="list-item" />
                 </v-template>
               </ListView>
-
-            <StackLayout>
-              <Label text="Artículos" />
-              <Label text="Proveedor" />
-              <Label text="Análisis de Costos" />
-            </StackLayout>
-
-        <Button text="Iniciar sesión" @tap="$navigateTo(detailPage)" />
+            <Button class="botones" text="Iniciar sesión" @tap="$navigateTo(detailPage)" />
+      </GridLayout>
+      
+ 
     </Page>
   `,
 
   data() {
     return {
       detailPage: Login,
+      articuloPage: Articulo,
       listOption: [
-        { id: 1, text: "Opción 1" },
+        { id: 1, text: "Artículos" },
         { id: 2, text: "Opción 2" },
         { id: 3, text: "Opción 3" },
       ]
@@ -43,14 +43,81 @@ const Master = {
     onItemTap(event) {
       const tappedItem = this.listOption[event.index]; // Obtiene el elemento seleccionado
       console.log("Elemento seleccionado:", tappedItem);
-      alert(`Seleccionaste: ${tappedItem.text}`);
+      if (tappedItem.id == 1){
+        console.log("Ir a Articulos");
+        this.$navigateTo(Articulo);
+      }
     },
   },
+};
+
+const Articulo = {
+  template: `
+    <Page>
+          <ActionBar>
+                <Label text="Artículos"/>
+            </ActionBar>
+          <SearchBar hint="Search hint" :text="searchPhrase" />
+        <GridLayout>
+            <ListView for="item in listArticulos" @itemTap="onItemTap2" >
+                <v-template>
+                    <!-- Shows the list item label in the default color and style. -->
+                    <Label :text="item.text"  class="list-item" />
+                </v-template>
+              </ListView>
+            <Button class="botones" text="Ir a Home" @tap="$navigateTo(homePage)" />
+      </GridLayout>
+      
+    </Page>
+  `,
+
+  data() {
+    return {
+      homePage: Master,
+      searchPhrase: "",
+      listArticulos: []
+    }
+  },
+  methods: {
+    // Maneja el evento al tocar un elemento de la lista
+    onItemTap2(event) {
+      const tappedItem = this.listArticulos[event.index]; // Obtiene el elemento seleccionado
+      console.log("Elemento seleccionado:", tappedItem);
+      
+    },
+    async BuscarArticulos() {
+console.log('Buscando Articulos');
+      const result = await articuloService.getAll();
+      console.log(result);
+      if (result != null){
+        
+        for (let i = 0; i < result.length; i++) {
+      
+          let articulo = {
+            id: result[i].Articulo_ID,
+            text: result[i].Articulo_Desc
+          }
+
+          this.listArticulos.push(articulo);
+        }
+      }
+      else {
+        alert('Usuario o Contraseña incorrecta, favor verificar.')
+      }
+
+    }
+  },
+  mounted() {
+   // this.BuscarArticulos();  // Llama al método para cargar los artículos cuando el componente se monte
+  }
 };
 
 const Login = {
   template: `
     <Page>
+      <ActionBar>
+            <Label text="JaMPe Software"/>
+        </ActionBar>
       <StackLayout>
       <ActivityIndicator busy="cargando" />
         <Image src="~/img/logo.jpg" id="img-logo"  width="200" height="auto" horizontalAlignment="center" verticalAlignment="middle" />
@@ -82,11 +149,6 @@ const Login = {
       else {
         alert('Usuario o Contraseña incorrecta, favor verificar.')
       }
-    //     if (result.success) {
-    //       this.$navigateTo("/home");
-    //     } else {
-    //       alert(result.message);
-    //     }
     }
   },
   data() {
