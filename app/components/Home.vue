@@ -5,21 +5,32 @@
         </ActionBar>
 
         <GridLayout>
-            <Label class="info">
-                <FormattedString>
-                    <Span class="fas" text.decode="&#xf135; "/>
-                    <Span :text="message"/>
-                </FormattedString>
-            </Label>
+            <ListView for="item in listOfItems" @itemTap="onItemTap">
+            <v-template>
+                <!-- Shows the list item label in the default color and style. -->
+                <Label :text="item.text" />
+            </v-template>
+            </ListView>
         </GridLayout>
+        <Button text="Iniciar sesión" @tap="IrAIniciarSesion" />
     </Page>
 </template>
 
+
+
 <script>
+  import { Login } from '@/views/Login'
+
   export default {
-    computed: {
-      message() {
-        return "Blank {N}-Vue app";
+    data() {
+        return {
+            loginPage: Login, 
+        }
+    },
+    methods: {
+        IrAIniciarSesion() {
+             this.$navigateTo(this.loginPage);
+            //alert('si');
       }
     }
   };

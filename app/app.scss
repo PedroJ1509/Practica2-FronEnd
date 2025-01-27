@@ -19,3 +19,31 @@
   font-family: 'Font Awesome 5 Free', 'fa-regular-400';
   font-weight: 400;
 }
+
+@import '@nativescript/theme/scss/variables/blue';
+
+  // Custom styles
+  .fas {
+      @include colorize($color: accent);
+  }
+
+  .info {
+      font-size: 20;
+      horizontal-align: center;
+      vertical-align: center;
+  }
+
+#img-logo {
+  margin-bottom: 100px;
+  display: inline-block;
+}
+.botones {
+  background-color:royalblue;
+  color: white;
+}
+.list-item {
+  padding: 10px;
+  font-size: 18px;
+  border-bottom-width: 1px;
+  border-bottom-color: #ccc;
+}
