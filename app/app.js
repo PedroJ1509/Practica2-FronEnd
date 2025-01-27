@@ -33,8 +33,7 @@ const Master = {
       articuloPage: Articulo,
       listOption: [
         { id: 1, text: "Artículos" },
-        { id: 2, text: "Opción 2" },
-        { id: 3, text: "Opción 3" },
+        { id: 2, text: "Análisis de Costos" }
       ]
     }
   },
@@ -55,7 +54,8 @@ const Articulo = {
   template: `
     <Page>
           <ActionBar>
-                <Label text="Artículos"/>
+                <Label text="Artículos - "/>
+                <Button class="fuente-grande" text="Artículos --> Ir a Home" @tap="$navigateTo(homePage)" />
             </ActionBar>
           <SearchBar hint="Search hint" :text="searchPhrase" />
         <GridLayout>
@@ -65,7 +65,7 @@ const Articulo = {
                     <Label :text="item.text"  class="list-item" />
                 </v-template>
               </ListView>
-            <Button class="botones" text="Ir a Home" @tap="$navigateTo(homePage)" />
+            
       </GridLayout>
       
     </Page>
@@ -108,7 +108,68 @@ console.log('Buscando Articulos');
     }
   },
   mounted() {
-   // this.BuscarArticulos();  // Llama al método para cargar los artículos cuando el componente se monte
+    this.BuscarArticulos();  // Llama al método para cargar los artículos cuando el componente se monte
+  }
+};
+
+const ArticuloIngredientes = {
+  template: `
+    <Page>
+          <ActionBar>
+                <Button class="fuente-grande" text="Ingredientes --> Ir a Artículos" @tap="$navigateTo(articuloPage)" />
+            </ActionBar>
+          <SearchBar hint="Search hint" :text="searchPhrase" />
+        <GridLayout>
+            <ListView for="item in listArticulos" @itemTap="onItemTap2" >
+                <v-template>
+                    <!-- Shows the list item label in the default color and style. -->
+                    <Label :text="item.text"  class="list-item" />
+                </v-template>
+              </ListView>
+            
+      </GridLayout>
+      
+    </Page>
+  `,
+
+  data() {
+    return {
+      articuloPage: Articulo,
+      searchPhrase: "",
+      listIngredientes: []
+    }
+  },
+  methods: {
+    // Maneja el evento al tocar un elemento de la lista
+    onItemTap2(event) {
+      const tappedItem = this.listArticulos[event.index]; // Obtiene el elemento seleccionado
+      console.log("Elemento seleccionado:", tappedItem);
+      
+    },
+    async BuscarArticulos() {
+console.log('Buscando Articulos');
+      const result = await articuloService.getAll();
+      console.log(result);
+      if (result != null){
+        
+        for (let i = 0; i < result.length; i++) {
+      
+          let articulo = {
+            id: result[i].Articulo_ID,
+            text: result[i].Articulo_Desc
+          }
+
+          this.listIngredientes.push(articulo);
+        }
+      }
+      else {
+        alert('Usuario o Contraseña incorrecta, favor verificar.')
+      }
+
+    }
+  },
+  mounted() {
+    this.BuscarArticulos();  // Llama al método para cargar los artículos cuando el componente se monte
   }
 };
 
