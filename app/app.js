@@ -2,6 +2,9 @@ import Vue from 'nativescript-vue'
 
 import { _loginService } from "./services/authService";
 import { articuloService } from './services/articulosService';
+import { analisisCostosService } from './services/analisisCostosService';
+
+//import { firebase } from '@nativescript/firebase';
 
 
 Vue.config.silent = false;
@@ -43,8 +46,10 @@ const Master = {
       const tappedItem = this.listOption[event.index]; // Obtiene el elemento seleccionado
       console.log("Elemento seleccionado:", tappedItem);
       if (tappedItem.id == 1){
-        console.log("Ir a Articulos");
         this.$navigateTo(Articulo);
+      }
+      else if (tappedItem.id == 2){
+        this.$navigateTo(AnalisisCostos);
       }
     },
   },
@@ -106,6 +111,73 @@ console.log('Buscando Articulos');
       }
 
     }
+  },
+  mounted() {
+    this.BuscarArticulos();  // Llama al método para cargar los artículos cuando el componente se monte
+  }
+};
+
+import numeral from 'numeral';
+
+const AnalisisCostos = {
+  template: `
+    <Page>
+          <ActionBar>
+                <Label text="Artículos - "/>
+                <Button class="fuente-grande" text="Analisis de Costos --> Ir a Home" @tap="$navigateTo(homePage)" />
+            </ActionBar>
+          <SearchBar hint="Search hint" :text="searchPhrase" />
+        <GridLayout>
+            <ListView for="item in listAnalisisCostos" @itemTap="onItemTap2" >
+                <v-template>
+                    <!-- Shows the list item label in the default color and style. -->
+                    <Label :text="item.text"  class="list-item" />
+                </v-template>
+              </ListView>
+            
+      </GridLayout>
+      
+    </Page>
+  `,
+
+  data() {
+    return {
+      homePage: Master,
+      searchPhrase: "",
+      listAnalisisCostos: []
+    }
+  },
+  methods: {
+    // Maneja el evento al tocar un elemento de la lista
+    onItemTap2(event) {
+      const tappedItem = this.listArticulos[event.index]; // Obtiene el elemento seleccionado
+      console.log("Elemento seleccionado:", tappedItem);
+      
+    },
+    async BuscarArticulos() {
+
+      const result = await analisisCostosService.getAll();
+      console.log(result);
+      if (result != null){
+        
+        for (let i = 0; i < result.length; i++) {
+      
+          let articulo = {
+            id: result[i].ArticuloAnalisisCosto_ID,
+            text: result[i].articulo.Articulo_Desc + ' -> ' + this.formatearConNumeral(result[i].TotalCosto)
+          }
+
+          this.listAnalisisCostos.push(articulo);
+        }
+      }
+      else {
+        alert('Usuario o Contraseña incorrecta, favor verificar.')
+      }
+
+    },
+    formatearConNumeral(numero) {
+      return numeral(numero).format('$0,0.00'); // Ejemplo: $1,234,567.89
+    },
   },
   mounted() {
     this.BuscarArticulos();  // Llama al método para cargar los artículos cuando el componente se monte
@@ -222,7 +294,15 @@ const Login = {
   }
 };
 
-
+// firebase.init({
+//   onMessageReceived: (message) => {
+//       console.log("Notificación recibida:", message);
+//   }
+// }).then(() => {
+//   console.log("Firebase inicializado correctamente");
+// }).catch(err => {
+//   console.log("Error al inicializar Firebase:", err);
+// });
 
 new Vue({
   render: (h) => h('frame', [h(Login)])

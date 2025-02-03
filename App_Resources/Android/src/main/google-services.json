@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "106121035625",
+    "project_id": "gestioncostobd",
+    "storage_bucket": "gestioncostobd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106121035625:android:693c318f59043aa6c447f8",
+        "android_client_info": {
+          "package_name": "com.tns.NativeScriptApplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP049E0dbIneNgsL6MNx_AUnawHLe0RyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
