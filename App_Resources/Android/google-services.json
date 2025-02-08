@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:106121035625:android:693c318f59043aa6c447f8",
+        "mobilesdk_app_id": "1:106121035625:android:77a6bafd476cc5d7c447f8",
         "android_client_info": {
-          "package_name": "com.tns.NativeScriptApplication"
+          "package_name": "org.nativescript.gestioncostos"
         }
       },
       "oauth_client": [],

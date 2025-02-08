@@ -6,6 +6,7 @@ android {
   defaultConfig {
     minSdkVersion 23
     targetSdkVersion 34
+    multiDexEnabled true
 
     // Version Information
     versionCode 1
@@ -25,18 +26,16 @@ android {
   }
 
 }
-
-repositories {
-    google()
-    mavenCentral()
+tasks.whenTaskAdded { task ->
+    if (task.name == "processDebugGoogleServices") {
+        task.finalizedBy ":app:mapDebugSourceSetPaths"  // Establecer que no haya dependencia cíclica.
+    }
 }
+
 
 dependencies {
-    implementation 'com.google.firebase:firebase-messaging:23.2.1'
-}
-googleServices {
-    disableVersionCheck = false  // Se asegura de que la versión del servicio sea la correcta
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
+  implementation 'com.google.firebase:firebase-core:21.1.1'
 }
 
-apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'  // Asegúrate de que esta línea esté presente
